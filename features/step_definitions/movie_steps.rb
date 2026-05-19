@@ -8,6 +8,10 @@ Then('I should see {string}') do |text|
   raise "Expected to see #{text.inspect} on the page" unless has_content || page.text.include?(text)
 end
 
+Then('I should not see {string}') do |text|
+  raise "Expected not to see #{text.inspect} on the page" if page.has_content?(text, wait: 1)
+end
+
 When('I fill in {string} with {string}') do |field, value|
   field_name = case field
                when 'Search Terms' then 'search_terms'
@@ -51,6 +55,10 @@ end
 When('I follow {string}') do |link_text|
   link = find(:link, text: /#{Regexp.escape(link_text)}/i, match: :first)
   link.click
+end
+
+When('I check the {string} checkbox') do |label|
+  check(label)
 end
 
 When('I select {string} from {string}') do |value, field|

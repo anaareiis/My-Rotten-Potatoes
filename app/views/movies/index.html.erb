@@ -20,15 +20,15 @@
   <div style="display: flex; gap: 15px; align-items: flex-end;">
     <div>
       <label>Filter by Rating:</label>
-      <select name="rating" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
-        <option value="" <%= 'selected' if params[:rating].blank? %>>All Ratings</option>
-        <option value="0" <%= 'selected' if params[:rating].present? && params[:rating].to_i == 0 %>>⭐ 0 stars</option>
-        <option value="1" <%= 'selected' if params[:rating].present? && params[:rating].to_i == 1 %>>⭐ 1 star</option>
-        <option value="2" <%= 'selected' if params[:rating].present? && params[:rating].to_i == 2 %>>⭐ 2 stars</option>
-        <option value="3" <%= 'selected' if params[:rating].present? && params[:rating].to_i == 3 %>>⭐ 3 stars</option>
-        <option value="4" <%= 'selected' if params[:rating].present? && params[:rating].to_i == 4 %>>⭐ 4 stars</option>
-        <option value="5" <%= 'selected' if params[:rating].present? && params[:rating].to_i == 5 %>>⭐ 5 stars</option>
-      </select>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+        <% { 'G' => '0', 'PG' => '2', 'PG-13' => '3', 'R' => '5' }.each do |label, value| %>
+          <% checkbox_id = "ratings_#{label.parameterize}" %>
+          <label for="<%= checkbox_id %>" style="display: inline-flex; align-items: center; gap: 4px;">
+            <%= check_box_tag 'ratings[]', value, @selected_ratings.include?(value), id: checkbox_id %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
     </div>
     <div>
       <input type="submit" value="Apply Filter" class="btn btn-success" style="padding: 10px 20px; margin-bottom: 17px;" />
@@ -45,12 +45,12 @@
       <tr style="background: #667eea; color: white;">
         <th style="padding: 15px; text-align: left; cursor: pointer; user-select: none; <%= 'background: #5568d3;' if @title_header %>">
           <% title_sort_order = params[:sort_by] == 'title' && params[:sort_order] != 'desc' ? 'desc' : 'asc' %>
-          <%= link_to "Title #{@title_header}", movies_path(sort_by: 'title', sort_order: title_sort_order, rating: params[:rating]), style: "color: white; text-decoration: none; font-weight: bold;" %>
+          <%= link_to "Title #{@title_header}", movies_path(sort_by: 'title', sort_order: title_sort_order, ratings: @selected_ratings), style: "color: white; text-decoration: none; font-weight: bold;" %>
         </th>
         <th style="padding: 15px; text-align: left;">Rating</th>
         <th style="padding: 15px; text-align: left; cursor: pointer; user-select: none; <%= 'background: #5568d3;' if @release_date_header %>">
           <% date_sort_order = params[:sort_by] == 'release_date' && params[:sort_order] != 'desc' ? 'desc' : 'asc' %>
-          <%= link_to "Release Date #{@release_date_header}", movies_path(sort_by: 'release_date', sort_order: date_sort_order, rating: params[:rating]), style: "color: white; text-decoration: none; font-weight: bold;" %>
+          <%= link_to "Release Date #{@release_date_header}", movies_path(sort_by: 'release_date', sort_order: date_sort_order, ratings: @selected_ratings), style: "color: white; text-decoration: none; font-weight: bold;" %>
         </th>
         <th style="padding: 15px; text-align: center;">Actions</th>
       </tr>

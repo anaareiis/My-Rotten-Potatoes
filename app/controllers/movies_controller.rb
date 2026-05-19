@@ -2,9 +2,10 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    
-    if params[:rating].present?
-      @movies = @movies.where(rating: params[:rating].to_i)
+
+    @selected_ratings = Array(params[:ratings].presence || params[:rating]).reject(&:blank?).map(&:to_s)
+    if @selected_ratings.any?
+      @movies = @movies.where(rating: @selected_ratings)
     end
     
     # Determine sort order based on sort_by parameter
