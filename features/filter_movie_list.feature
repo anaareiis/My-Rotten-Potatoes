@@ -18,8 +18,7 @@ Feature: Filter movie list
 
   Scenario: Restrict to movies with PG or R ratings
     When I go to the RottenPotatoes home page
-    And I check the "PG" checkbox
-    And I check the "R" checkbox
+    And I check the following ratings: "PG, R"
     And I press "Apply Filter"
     Then I should see "Finding Nemo"
     And I should see "The Terminator"

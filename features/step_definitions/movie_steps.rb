@@ -61,6 +61,12 @@ When('I check the {string} checkbox') do |label|
   check(label)
 end
 
+When('I check the following ratings: {string}') do |ratings|
+  ratings.split(',').map(&:strip).each do |rating|
+    check(rating)
+  end
+end
+
 When('I select {string} from {string}') do |value, field|
   mapped_value = case value
                  when 'PG' then '2'
