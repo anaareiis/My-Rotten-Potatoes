@@ -93,11 +93,14 @@ Then('I should see {string} before {string}') do |first_text, second_text|
   raise "Expected #{first_text.inspect} to appear before #{second_text.inspect}" unless first_index < second_index
 end
 
-Given('there are {int} movies with the following details:') do |count, table|
+def create_movies_from_table(table)
   table.hashes.each do |movie_data|
     rating_value = case movie_data['Rating']
+                   when 'G' then '0'
                    when 'PG' then '2'
+                   when 'PG-13' then '3'
                    when 'R' then '5'
+                   when 'NC-17' then '5'
                    else movie_data['Rating']
                    end
 
@@ -108,6 +111,16 @@ Given('there are {int} movies with the following details:') do |count, table|
       release_date: Date.parse(movie_data['Release date'])
     )
   end
+end
+
+Given('there are {int} movies with the following details:') do |count, table|
+  raise "Expected #{count} movies, but got #{table.hashes.size}" unless table.hashes.size == count
+
+  create_movies_from_table(table)
+end
+
+Given('the following movies exist:') do |table|
+  create_movies_from_table(table)
 end
 
 When('I go to the RottenPotatoes home page') do
