@@ -23,3 +23,9 @@ Feature: Filter movie list
     And I should see "The Terminator"
     And I should not see "Aladdin"
     And I should not see "The Avengers"
+
+  Scenario: All ratings selected
+    When I go to the RottenPotatoes home page
+    And I check the following ratings: "G, PG, PG-13, R"
+    And I press "Apply Filter"
+    Then I should see all of the movies
