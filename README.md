@@ -16,10 +16,23 @@ A clean and modern Ruby on Rails web application for managing and discovering mo
 - 🧪 **BDD Testing** - Cucumber + Capybara for behavior-driven development (NEW!)
 - 🔎 **TMDb Search** - Search for movies in The Movie Database (NEW!)
 
-## 🧪 BDD Implementation (NEW!)
+## 🧪 BDD Implementation
 
-This project now includes BDD tests with Cucumber. The documentation has been unified in a single file:
+This project includes BDD tests with Cucumber covering the following behaviors:
+
+- TMDb search sad path (movie not found)
+- Adding and sorting movies by title (imperative and declarative)
+- Filtering movies by selected ratings
+- Sorting movies by release date
+
+Full documentation, scenario descriptions, step definitions reference, and run commands:
 - 📄 [BDD.md](BDD.md) - BDD documentation and instructions
+
+Run all scenarios with:
+
+```bash
+bundle exec cucumber
+```
 
 ### Full CRUD Implementation
 
