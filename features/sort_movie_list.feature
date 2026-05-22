@@ -13,3 +13,8 @@ Feature: Sort movie list
     When I go to the RottenPotatoes home page
     And I click "title" sort header
     Then "Apocalypse Now" should appear before "Zorro" in the movie list
+
+  Scenario: Sort movies by release date
+    When I go to the RottenPotatoes home page
+    And I click "release date" sort header
+    Then "Zorro" should appear before "Apocalypse Now" in the movie list
