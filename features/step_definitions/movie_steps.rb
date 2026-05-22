@@ -108,6 +108,8 @@ Then('I should see {string} before {string}') do |first_text, second_text|
 end
 
 def create_movies_from_table(table)
+  @movies_from_setup ||= []
+
   table.hashes.each do |movie_data|
     rating_value = case movie_data['Rating']
                    when 'G' then '0'
@@ -124,6 +126,8 @@ def create_movies_from_table(table)
       description: movie_data['Description'],
       release_date: Date.parse(movie_data['Release date'])
     )
+
+    @movies_from_setup << movie_data['Title']
   end
 end
 
@@ -139,4 +143,14 @@ end
 
 When('I go to the RottenPotatoes home page') do
   visit movies_path
+end
+
+Then('I should see all of the movies') do
+  raise 'No movies were created by the scenario setup' if @movies_from_setup.nil? || @movies_from_setup.empty?
+
+  within('table tbody') do
+    @movies_from_setup.each do |movie_title|
+      raise "Expected to see #{movie_title.inspect} in the movie list" unless page.has_content?(movie_title)
+    end
+  end
 end

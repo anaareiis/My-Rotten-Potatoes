@@ -13,8 +13,7 @@ Feature: Filter movie list
 
   Scenario: View movies created by the background
     When I go to the RottenPotatoes home page
-    Then I should see "Aladdin"
-    And I should see "The Terminator"
+    Then I should see all of the movies
 
   Scenario: Restrict to movies with PG or R ratings
     When I go to the RottenPotatoes home page
