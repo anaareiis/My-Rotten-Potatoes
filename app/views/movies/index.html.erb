@@ -46,12 +46,12 @@
       <tr style="background: #667eea; color: white;">
         <th style="padding: 15px; text-align: left; cursor: pointer; user-select: none; <%= 'background: #5568d3;' if @title_header %>">
           <% title_sort_order = params[:sort_by] == 'title' && params[:sort_order] != 'desc' ? 'desc' : 'asc' %>
-          <%= link_to "Title #{@title_header}", movies_path(sort_by: 'title', sort_order: title_sort_order, ratings: @selected_ratings), style: "color: white; text-decoration: none; font-weight: bold;" %>
+          <%= link_to "Title #{@title_header}", movies_path(sort_by: 'title', sort_order: title_sort_order, ratings: @selected_ratings), id: :title_header, style: "color: white; text-decoration: none; font-weight: bold;" %>
         </th>
         <th style="padding: 15px; text-align: left;">Rating</th>
         <th style="padding: 15px; text-align: left; cursor: pointer; user-select: none; <%= 'background: #5568d3;' if @release_date_header %>">
           <% date_sort_order = params[:sort_by] == 'release_date' && params[:sort_order] != 'desc' ? 'desc' : 'asc' %>
-          <%= link_to "Release Date #{@release_date_header}", movies_path(sort_by: 'release_date', sort_order: date_sort_order, ratings: @selected_ratings), style: "color: white; text-decoration: none; font-weight: bold;" %>
+          <%= link_to "Release Date #{@release_date_header}", movies_path(sort_by: 'release_date', sort_order: date_sort_order, ratings: @selected_ratings), id: :release_date_header, style: "color: white; text-decoration: none; font-weight: bold;" %>
         </th>
         <th style="padding: 15px; text-align: center;">Actions</th>
       </tr>
