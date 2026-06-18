@@ -62,5 +62,72 @@ RSpec.describe MoviesController, type: :controller do
         expect(flash[:alert]).to eq('Movie That Does Not Exist was not found in TMDb.')
       end
     end
+
+    context 'when the matching movie already exists locally' do
+      it 'redirects with a notice instead of creating a duplicate' do
+        Movie.create!(title: 'Inception', rating: 4, description: 'Already in the list.', release_date: '2010-07-16')
+
+        stub_request(:get, 'https://api.themoviedb.org/3/search/movie')
+          .with(query: hash_including({ 'query' => 'Inception' }))
+          .to_return(status: 200, body: {
+            results: [
+              { id: 27205, title: 'Inception', overview: 'A thief who steals secrets through dreams.', release_date: '2010-07-16', vote_average: 8.4 }
+            ]
+          }.to_json)
+
+        expect { post :search_tmdb, params: { search_terms: 'Inception' } }.not_to change(Movie, :count)
+
+        expect(response).to redirect_to(movies_path)
+        expect(flash[:notice]).to eq('Inception is already in your list.')
+      end
+    end
+
+    context 'when the TMDb result fails Movie validation' do
+      it 'redirects with the validation error' do
+        stub_request(:get, 'https://api.themoviedb.org/3/search/movie')
+          .with(query: hash_including({ 'query' => 'Untitled' }))
+          .to_return(status: 200, body: {
+            results: [
+              { id: 1, title: 'Untitled', overview: 'short', release_date: '2010-07-16', vote_average: 8.4 }
+            ]
+          }.to_json)
+        stub_request(:get, 'https://api.themoviedb.org/3/movie/1/credits')
+          .with(query: hash_including({}))
+          .to_return(status: 200, body: { crew: [] }.to_json)
+
+        post :search_tmdb, params: { search_terms: 'Untitled' }
+
+        expect(response).to redirect_to(movies_path)
+        expect(flash[:alert]).to be_present
+      end
+    end
+  end
+
+  describe 'POST #create' do
+    it 're-renders the form when the movie is invalid' do
+      post :create, params: { movie: { title: '', rating: 4, description: 'Too short to matter', release_date: '2020-01-01' } }
+
+      expect(response).to render_template(:new)
+    end
+  end
+
+  describe 'PATCH #update' do
+    it 're-renders the form when the update is invalid' do
+      movie = Movie.create!(title: 'Valid Movie', rating: 4, description: 'A perfectly valid description.', release_date: '2020-01-01')
+
+      patch :update, params: { id: movie.id, movie: { title: '' } }
+
+      expect(response).to render_template(:edit)
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'deletes the movie and redirects to the movie list' do
+      movie = Movie.create!(title: 'Movie To Delete', rating: 4, description: 'A perfectly valid description.', release_date: '2020-01-01')
+
+      expect { delete :destroy, params: { id: movie.id } }.to change(Movie, :count).by(-1)
+
+      expect(response).to redirect_to(movies_path)
+    end
   end
 end
