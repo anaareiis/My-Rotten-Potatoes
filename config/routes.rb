@@ -3,6 +3,9 @@ Rails.application.routes.draw do
     collection do
       post :search_tmdb
     end
+    member do
+      get :same_director
+    end
   end
   root 'movies#index'
 end

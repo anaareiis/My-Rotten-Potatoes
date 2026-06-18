@@ -59,6 +59,11 @@ class MoviesController < ApplicationController
     redirect_to movies_path, notice: "Movie deleted successfully."
   end
 
+  def same_director
+    @movie = Movie.find(params[:id])
+    @movies = @movie.movies_with_same_director
+  end
+
   def search_tmdb
     search_terms = params[:search_terms]
     
