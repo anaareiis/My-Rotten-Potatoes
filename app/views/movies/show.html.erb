@@ -5,6 +5,11 @@
       <p style="margin: 0; color: #666; font-size: 14px;">
         📅 Released: <%= @movie.release_date.strftime("%B %d, %Y") if @movie.release_date %>
       </p>
+      <% if @movie.director.present? %>
+        <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">
+          🎥 Director: <%= @movie.director %>
+        </p>
+      <% end %>
     </div>
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; border-radius: 8px; text-align: center; min-width: 100px;">
       <div style="font-size: 28px; font-weight: bold;">⭐ <%= @movie.rating %></div>
@@ -27,5 +32,6 @@
         data: { confirm: "Are you sure?" },
         style: "padding: 10px 18px; height: 44px; background-color: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.3s; margin: 0; display: flex; align-items: center;" %>
     <%= link_to "↩️ Back to Movies", movies_path, style: "padding: 10px 18px; height: 44px; display: flex; align-items: center; background-color: #007bff; color: white; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; font-weight: 500; transition: all 0.3s;" %>
+    <%= link_to "🎬 Find Movies With Same Director", same_director_movie_path(@movie), style: "padding: 10px 18px; height: 44px; display: flex; align-items: center; background-color: #6f42c1; color: white; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; font-weight: 500; transition: all 0.3s;" %>
   </div>
 </div>

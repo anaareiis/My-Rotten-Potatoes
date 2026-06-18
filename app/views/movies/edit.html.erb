@@ -36,6 +36,11 @@
       <%= f.date_field :release_date, required: true, max: Date.today.to_s %>
     </div>
 
+    <div style="margin-bottom: 18px;">
+      <label><strong>🎥 Director</strong> (optional)</label>
+      <%= f.text_field :director, placeholder: "Enter director name" %>
+    </div>
+
     <div style="margin-top: 25px; display: flex; gap: 10px;">
       <input type="submit" value="💾 Update Movie" class="btn btn-success" style="flex: 1;" />
       <%= link_to "↩️ Back to Movie", movie_path(@movie), class: "btn btn-primary", style: "flex: 1; text-align: center;" %>
