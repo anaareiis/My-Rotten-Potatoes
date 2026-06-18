@@ -2,6 +2,28 @@ Given('I am on the RottenPotatoes home page') do
   visit movies_path
 end
 
+Given('TMDb has no movie called {string}') do |title|
+  stub_request(:get, 'https://api.themoviedb.org/3/search/movie')
+    .with(query: hash_including({ 'query' => title }))
+    .to_return(status: 200, body: { results: [] }.to_json)
+end
+
+Given('TMDb has a movie called {string} directed by {string}') do |title, director|
+  tmdb_id = rand(100_000)
+
+  stub_request(:get, 'https://api.themoviedb.org/3/search/movie')
+    .with(query: hash_including({ 'query' => title }))
+    .to_return(status: 200, body: {
+      results: [
+        { id: tmdb_id, title: title, overview: 'A movie fetched from TMDb for testing.', release_date: '2010-07-16', vote_average: 8.0 }
+      ]
+    }.to_json)
+
+  stub_request(:get, "https://api.themoviedb.org/3/movie/#{tmdb_id}/credits")
+    .with(query: hash_including({}))
+    .to_return(status: 200, body: { crew: [{ job: 'Director', name: director }] }.to_json)
+end
+
 Then('I should see {string}') do |text|
   # Check in both page content and flash messages
   has_content = page.has_content?(text, wait: 5)
