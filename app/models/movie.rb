@@ -5,7 +5,11 @@ class Movie < ApplicationRecord
   validates :release_date, presence: true, comparison: { less_than_or_equal_to: Date.today, message: "cannot be in the future" }
   
   validate :release_date_is_reasonable
-  
+
+  def movies_with_same_director
+    Movie.where(director: director).where.not(id: id)
+  end
+
   private
   
   def release_date_is_reasonable
