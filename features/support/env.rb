@@ -2,6 +2,8 @@ require 'simplecov'
 SimpleCov.start 'rails'
 
 require 'cucumber/rails'
+require 'webmock/cucumber'
+WebMock.disable_net_connect!(allow_localhost: true)
 
 ActionController::Base.allow_rescue = false
 
