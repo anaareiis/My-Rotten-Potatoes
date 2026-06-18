@@ -19,6 +19,7 @@ When('I fill in {string} with {string}') do |field, value|
                when 'Description' then 'movie_description'
                when 'Release date' then 'movie_release_date'
                when 'Rating' then 'movie_rating'
+               when 'Director' then 'movie_director'
                else field
                end
 
@@ -124,7 +125,8 @@ def create_movies_from_table(table)
       title: movie_data['Title'],
       rating: rating_value,
       description: movie_data['Description'],
-      release_date: Date.parse(movie_data['Release date'])
+      release_date: Date.parse(movie_data['Release date']),
+      director: movie_data['Director']
     )
 
     @movies_from_setup << movie_data['Title']
