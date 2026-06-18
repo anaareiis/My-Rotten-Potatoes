@@ -61,7 +61,11 @@ class MoviesController < ApplicationController
 
   def same_director
     @movie = Movie.find(params[:id])
-    @movies = @movie.movies_with_same_director
+    if @movie.director.present?
+      @movies = @movie.movies_with_same_director
+    else
+      redirect_to movie_path(@movie), alert: "#{@movie.title} has no director information."
+    end
   end
 
   def search_tmdb
