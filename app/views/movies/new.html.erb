@@ -20,7 +20,7 @@
 
     <div style="margin-bottom: 18px;">
       <label><strong>⭐ Rating</strong> (required)</label>
-      <%= f.select :rating, (0..5).to_a, { prompt: 'Select a rating (0-5)' }, required: true %>
+      <%= f.select :rating, (1..5).to_a, { prompt: 'Select a rating (1-5 stars)' }, required: true %>
     </div>
 
     <div style="margin-bottom: 18px;">

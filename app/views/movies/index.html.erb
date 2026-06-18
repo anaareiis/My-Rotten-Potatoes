@@ -21,11 +21,12 @@
     <div>
       <label>Filter by Rating:</label>
       <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
-        <% { 'G' => '0', 'PG' => '2', 'PG-13' => '3', 'R' => '5' }.each do |label, value| %>
-          <% checkbox_id = "ratings_#{label.parameterize}" %>
+        <% (1..5).each do |stars| %>
+          <% value = stars.to_s %>
+          <% checkbox_id = "ratings_#{value}" %>
           <label for="<%= checkbox_id %>" style="display: inline-flex; align-items: center; gap: 4px;">
             <%= check_box_tag 'ratings[]', value, @selected_ratings.include?(value), id: checkbox_id %>
-            <%= label %>
+            ⭐ <%= value %>
           </label>
         <% end %>
       </div>

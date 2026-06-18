@@ -6,8 +6,8 @@ Feature: Sort movie list
   Background:
     Given the following movies exist:
       | Title           | Rating | Description                                                     | Release date |
-      | Apocalypse Now  | R      | An epic war film depicting the horrors and chaos of the Vietnam | 1979-05-19   |
-      | Zorro           | PG     | A classic adventure film about a masked hero fighting injustice | 1920-01-28   |
+      | Apocalypse Now  | 5      | An epic war film depicting the horrors and chaos of the Vietnam | 1979-05-19   |
+      | Zorro           | 2      | A classic adventure film about a masked hero fighting injustice | 1920-01-28   |
 
   Scenario: Sort movies alphabetically by title
     When I go to the RottenPotatoes home page

@@ -4,7 +4,7 @@ class MovieFilterTest < ActionDispatch::IntegrationTest
   test "filters movies by selected ratings" do
     Movie.create!(
       title: 'Aladdin',
-      rating: 0,
+      rating: 1,
       description: 'A musical adventure about a street-smart hero and a magic lamp',
       release_date: '1992-11-25'
     )

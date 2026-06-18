@@ -91,18 +91,12 @@ When('I check the following ratings: {string}') do |ratings|
 end
 
 When('I select {string} from {string}') do |value, field|
-  mapped_value = case value
-                 when 'PG' then '2'
-                 when 'R' then '5'
-                 else value
-                 end
-
   field_name = case field
                when 'Rating' then 'movie_rating'
                else field
                end
 
-  select mapped_value, from: field_name
+  select value, from: field_name
 end
 
 When('I click {string} sort header') do |column|
@@ -134,18 +128,9 @@ def create_movies_from_table(table)
   @movies_from_setup ||= []
 
   table.hashes.each do |movie_data|
-    rating_value = case movie_data['Rating']
-                   when 'G' then '0'
-                   when 'PG' then '2'
-                   when 'PG-13' then '3'
-                   when 'R' then '5'
-                   when 'NC-17' then '5'
-                   else movie_data['Rating']
-                   end
-
     Movie.create!(
       title: movie_data['Title'],
-      rating: rating_value,
+      rating: movie_data['Rating'],
       description: movie_data['Description'],
       release_date: Date.parse(movie_data['Release date']),
       director: movie_data['Director']

@@ -87,7 +87,7 @@ class MoviesController < ApplicationController
       title: result['title'],
       description: result['overview'].to_s.truncate(1000),
       release_date: result['release_date'],
-      rating: (result['vote_average'].to_f / 2.0).round.clamp(0, 5),
+      rating: (result['vote_average'].to_f / 2.0).round.clamp(1, 5),
       director: tmdb_client.find_director(result['id'])
     )
 
