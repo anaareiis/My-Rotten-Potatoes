@@ -25,4 +25,42 @@ RSpec.describe MoviesController, type: :controller do
       end
     end
   end
+
+  describe 'POST #search_tmdb' do
+    context 'when TMDb finds a matching movie' do
+      it 'creates the movie with details and director from TMDb' do
+        stub_request(:get, 'https://api.themoviedb.org/3/search/movie')
+          .with(query: hash_including({ 'query' => 'Inception' }))
+          .to_return(status: 200, body: {
+            results: [
+              { id: 27205, title: 'Inception', overview: 'A thief who steals secrets through dreams.', release_date: '2010-07-16', vote_average: 8.4 }
+            ]
+          }.to_json)
+        stub_request(:get, 'https://api.themoviedb.org/3/movie/27205/credits')
+          .with(query: hash_including({}))
+          .to_return(status: 200, body: { crew: [{ job: 'Director', name: 'Christopher Nolan' }] }.to_json)
+
+        post :search_tmdb, params: { search_terms: 'Inception' }
+
+        movie = Movie.find_by(title: 'Inception')
+        expect(movie).to be_present
+        expect(movie.director).to eq('Christopher Nolan')
+        expect(movie.rating).to eq('4')
+        expect(response).to redirect_to(movies_path)
+      end
+    end
+
+    context 'when TMDb finds no matching movie' do
+      it 'redirects with a not-found alert' do
+        stub_request(:get, 'https://api.themoviedb.org/3/search/movie')
+          .with(query: hash_including({ 'query' => 'Movie That Does Not Exist' }))
+          .to_return(status: 200, body: { results: [] }.to_json)
+
+        post :search_tmdb, params: { search_terms: 'Movie That Does Not Exist' }
+
+        expect(response).to redirect_to(movies_path)
+        expect(flash[:alert]).to eq('Movie That Does Not Exist was not found in TMDb.')
+      end
+    end
+  end
 end

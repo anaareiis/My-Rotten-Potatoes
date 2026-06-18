@@ -6,7 +6,11 @@ class MovieSearchTest < ActionDispatch::IntegrationTest
     get movies_path
     assert_response :success
     assert_select 'h3', 'Search TMDb for a movie'
-    
+
+    stub_request(:get, "https://api.themoviedb.org/3/search/movie")
+      .with(query: hash_including({ "query" => "Movie That Does Not Exist" }))
+      .to_return(status: 200, body: { results: [] }.to_json)
+
     # POST search for nonexistent movie
     post search_tmdb_movies_path, params: { search_terms: 'Movie That Does Not Exist' }
     

@@ -70,12 +70,32 @@ class MoviesController < ApplicationController
 
   def search_tmdb
     search_terms = params[:search_terms]
-    
-    # Simulate a TMDb search that always returns "not found" to demonstrate the sad path.
-    # In a real implementation, this would call the TMDb API.
-    @tmdb_search_error = "#{search_terms} was not found in TMDb."
+    tmdb_client = TmdbClient.new
+    result = tmdb_client.search(search_terms)
 
-    redirect_to movies_path, alert: @tmdb_search_error
+    if result.nil?
+      redirect_to movies_path, alert: "#{search_terms} was not found in TMDb."
+      return
+    end
+
+    if Movie.exists?(['lower(title) = ?', result['title'].downcase])
+      redirect_to movies_path, notice: "#{result['title']} is already in your list."
+      return
+    end
+
+    movie = Movie.new(
+      title: result['title'],
+      description: result['overview'].to_s.truncate(1000),
+      release_date: result['release_date'],
+      rating: (result['vote_average'].to_f / 2.0).round.clamp(0, 5),
+      director: tmdb_client.find_director(result['id'])
+    )
+
+    if movie.save
+      redirect_to movies_path, notice: "#{movie.title} was added from TMDb."
+    else
+      redirect_to movies_path, alert: movie.errors.full_messages.to_sentence
+    end
   end
 
   private
